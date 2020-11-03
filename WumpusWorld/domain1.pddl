@@ -1,6 +1,8 @@
 (define (domain wurmpus1dom)
 
-    (:requirements :strips)
+    (:requirements 
+        :strips
+    )
 
     (:predicates
         (isAdjacent ?sq1 ?sq2)

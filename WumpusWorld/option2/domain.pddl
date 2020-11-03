@@ -1,6 +1,4 @@
-;Header and description
-
-(define (domain wurmpus_adl)
+(define (domain domain_name)
 
 ;remove requirements that are not needed
 (:requirements :strips :fluents :durative-actions :timed-initial-literals :typing :conditional-effects :negative-preconditions :duration-inequalities :equality)

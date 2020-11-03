@@ -8,14 +8,13 @@
         (isWurmpus ?agent)
         (isPlayer ?agent)
         (isArrow ?object)
-        (isGold ?object)
         (isDead ?agent)
         (hasObject ?agent ?object)
         (isWurmpusIn ?sq)
         (isInSquare ?obj ?sq)
     )
 
-    (:action moveAgent
+    (:action movePlayer
         :parameters (?sqf ?sqt ?agent)
         :precondition (and
             (isPlayer ?agent)
@@ -27,21 +26,6 @@
         :effect (and (not (isInSquare ?agent ?sqf))
             (isInSquare ?agent ?sqt)
         )
-    )
-
-    (:action moveWurmpus
-        :parameters (?sqf ?sqt ?agent)
-        :precondition (and
-            (isWurmpus ?agent)
-            (isAdjacent ?sqf ?sqt)
-            (isInSquare ?agent ?sqf)
-            (not (isPit ?sqt))
-            (not (isWurmpusIn ?sqt))
-        )
-    :effect (and (not (isInSquare ?agent ?sqf))
-		 (isInSquare ?agent ?sqt)
-		 (not (isWurmpusIn ?sqf))
-		 (isWurmpusIn ?sqt))
     )
 
     (:action pickupObject

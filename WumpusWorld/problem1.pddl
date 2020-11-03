@@ -13,7 +13,6 @@
         (isAdjacent sq2-3 sq2-2) (isAdjacent sq2-3 sq1-3)
         (isPit sq1-2)
 
-        (isGold gold)
         (isInSquare gold sq1-3)
 
         (isPlayer player)

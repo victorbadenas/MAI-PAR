@@ -1,9 +1,8 @@
-(define (problem wumpusMovingTarget) (:domain wumpusMovingTarget)
+(define (problem wumpusIndex) (:domain wumpusIndex)
     (:objects
     ; Definition of our objects: board coordinates, time, bool value, robot and ghost
         Y0 Y1 - boardY
         X0 X1 X2 - boardX
-        T0 T1 T2 T3 T4 T5 T6 T7 T8 T9 - time
         true false - boolValue
         agent1 - agent
         wumpus1 - movingWumpus
@@ -17,15 +16,6 @@
 
 
         ; Time axis description, with relative positions from T0 to T9
-        (futureTime T0 T1)
-        (futureTime T1 T2)
-        (futureTime T2 T3)
-        (futureTime T3 T4)
-        (futureTime T4 T5)
-        (futureTime T5 T6)
-        (futureTime T6 T7)
-        (futureTime T7 T8)
-        (futureTime T8 T9)
         
         ; Board configuration below
         ; Description of the how are distributed the X coordinates in the board
@@ -52,21 +42,6 @@
 
         ; Board coordinates of the ghost in the initial position
         (wumpusAtCoordinate wumpus1 X2 Y1)
-
-
-        ; Ghost predefined positions across time
-        (positionWumpus X2 Y1 T1)
-        (positionWumpus X1 Y1 T2)
-        ; (positionWumpus X3 Y2 T3)
-        ; (positionWumpus X3 Y3 T4)
-        ; (positionWumpus X4 Y3 T5)
-        ; (positionWumpus X4 Y4 T6)
-
-
-        ; Global variables
-        (canAgentMove true)
-        (presentTime T0)
-        (usedTime T0)
 
         ; Special
         (pitPosition X1 Y0)

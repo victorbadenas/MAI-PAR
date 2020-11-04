@@ -1,6 +1,6 @@
 ;Header and description
 
-(define (domain wumpusMovingTarget)
+(define (domain wumpusIndex)
 
     (:requirements
         :strips
@@ -9,7 +9,6 @@
         :typing
         :adl
         :fluents
-        :action-costs
     )
 
     (:types
@@ -17,19 +16,12 @@
         movingWumpus
         boardX
         boardY
-        time
         boolValue
         gold
         arrow
     )
 
     (:predicates
-        (presentTime    ?t  - time)
-        (futureTime     ?t1 - time 
-                        ?t2 - time)
-
-        (usedTime       ?t  - time)
-
         (belowX         ?xa - boardX
                         ?xb - boardX)
         (oneBelowX      ?xa - boardX
@@ -57,11 +49,8 @@
                                 ?x     - boardX
                                 ?y     - boardY)
 
-        (canAgentMove       ?bool - boolValue)
-
         (positionWumpus     ?indexX - boardX
-                            ?indexY - boardY
-                            ?time    - time)
+                            ?indexY - boardY)
 
         (pitPosition        ?indexX - boardX
                             ?indexY - boardY)
@@ -86,7 +75,6 @@
             ?staticY - boardY
         )
         :precondition (and
-            (canAgentMove true)
             (not (agentAtCoordinateX ?entity ?targetX))
             (agentAtCoordinateX ?entity ?sourceX)
             (agentAtCoordinateY ?entity ?staticY)
@@ -97,7 +85,6 @@
         )
         :effect (and
             (increase (cost) 1)
-            (not (canAgentMove true))
             (not (agentAtCoordinateX ?entity ?sourceX))
             (agentAtCoordinateX ?entity ?targetX)
         )
@@ -110,7 +97,6 @@
             ?staticY - boardY
         )
         :precondition (and
-            (canAgentMove true)
             (not (agentAtCoordinateX ?entity ?targetX))
             (agentAtCoordinateX ?entity ?sourceX)
             (agentAtCoordinateY ?entity ?staticY)
@@ -121,7 +107,6 @@
         )
         :effect (and
             (increase (cost) 1)
-            (not (canAgentMove true))
             (not (agentAtCoordinateX ?entity ?sourceX))
             (agentAtCoordinateX ?entity ?targetX)
         )
@@ -134,7 +119,6 @@
             ?staticX - boardX
         )
         :precondition (and
-            (canAgentMove true)
             (not (agentAtCoordinateY ?entity ?targetY))
             (agentAtCoordinateY ?entity ?sourceY)
             (agentAtCoordinateX ?entity ?staticX)
@@ -145,7 +129,6 @@
         )
         :effect (and
             (increase (cost) 1)
-            (not (canAgentMove true))
             (not (agentAtCoordinateY ?entity ?sourceY))
             (agentAtCoordinateY ?entity ?targetY)
         )
@@ -158,7 +141,6 @@
             ?staticX - boardX
         )
         :precondition (and
-            (canAgentMove true)
             (not (agentAtCoordinateY ?entity ?targetY))
             (agentAtCoordinateY ?entity ?sourceY)
             (agentAtCoordinateX ?entity ?staticX)
@@ -169,88 +151,8 @@
         )
         :effect (and
             (increase (cost) 1)
-            (not (canAgentMove true))
             (not (agentAtCoordinateY ?entity ?sourceY))
             (agentAtCoordinateY ?entity ?targetY)
-        )
-    )
-    (:action wumpusMoves
-        :parameters(
-            ?wumpus - movingWumpus
-            ?presentMoment - time
-            ?sourceX - boardX
-            ?sourceY - boardY
-            ?aheadMoment - time
-            ?targetX  - boardX
-            ?targetY  - boardY
-        )
-        :precondition(and
-            (not (canAgentMove true))
-            (presentTime ?presentMoment)
-            (not (presentTime ?aheadMoment))
-            (wumpusAtCoordinate ?wumpus ?sourceX ?sourceY)
-            (positionWumpus ?targetX ?targetY ?aheadMoment)
-            (futureTime ?presentMoment ?aheadMoment)
-        )
-        :effect(and
-            (canAgentMove true)
-            (not (presentTime ?presentMoment ))
-            (presentTime ?aheadMoment  )
-            (not (wumpusAtCoordinate ?wumpus ?sourceX ?sourceY))
-            (wumpusAtCoordinate ?wumpus ?targetX ?targetY)
-            (forall (?agent - agent) (when (and 
-                    (not (agentAtCoordinateX ?agent ?targetX))
-                    (not (agentAtCoordinateY ?agent ?targetY))
-                )
-                (and
-                    (wumpusAtCoordinate ?wumpus ?sourceX ?sourceY)
-                ))
-            )
-            (usedTime ?presentMoment)
-        )
-    )
-    (:action wumpusStays
-        :parameters (
-            ?wumpus - movingWumpus
-            ?presentMoment - time
-            ?sourceX - boardX
-            ?sourceY - boardY
-            ?aheadMoment - time
-            ?targetX  - boardX
-            ?targetY  - boardY
-        )
-        :precondition (and
-            (not (canAgentMove true))
-            (presentTime ?presentMoment )
-            (not (presentTime ?aheadMoment))
-            (futureTime ?presentMoment ?aheadMoment)
-            (wumpusAtCoordinate ?wumpus ?sourceX ?sourceY)
-            (not (usedTime ?presentMoment ))
-        )
-        :effect (and
-            (canAgentMove true)
-            (not (presentTime ?presentMoment))
-            (presentTime ?aheadMoment)
-            (wumpusAtCoordinate ?wumpus ?sourceX ?sourceY)
-        )
-    )
-
-    (:action wumpusDead
-        :parameters (
-            ?wumpus - movingWumpus
-            ?presentMoment - time
-            ?aheadMoment - time
-        )
-        :precondition (and 
-            (not (alive ?wumpus))
-            (presentTime ?presentMoment)
-            (futureTime ?presentMoment ?aheadMoment)
-            (not (usedTime ?presentMoment))
-        )
-        :effect (and 
-            (canAgentMove true)
-            (not (presentTime ?presentMoment))
-            (presentTime ?aheadMoment)
         )
     )
 

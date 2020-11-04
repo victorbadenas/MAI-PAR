@@ -19,6 +19,8 @@
         boardY
         time
         boolValue
+        gold
+        arrow
     )
 
     (:predicates
@@ -51,9 +53,8 @@
         (agentAtCoordinateY     ?entity - agent
                                 ?y     - boardY)
 
-        (wumpusAtCoordinateX    ?entity - movingWumpus
-                                ?x     - boardX)
-        (wumpusAtCoordinateY    ?entity - movingWumpus
+        (wumpusAtCoordinate     ?entity - movingWumpus
+                                ?x     - boardX
                                 ?y     - boardY)
 
         (canAgentMove       ?bool - boolValue)
@@ -64,6 +65,13 @@
 
         (pitPosition        ?indexX - boardX
                             ?indexY - boardY)
+        (alive              ?entity - movingWumpus)
+
+        (goldPosition       ?indexX - boardX
+                            ?indexY - boardY)
+
+        (hasObject          ?object - object
+                            ?entity - agent)
     )
 
     (:functions
@@ -83,6 +91,8 @@
             (agentAtCoordinateX ?entity ?sourceX)
             (agentAtCoordinateY ?entity ?staticY)
             (not (pitPosition ?targetX ?staticY))
+            (forall (?wumpus - movingWumpus) 
+                (not (wumpusAtCoordinate ?wumpus ?targetX ?staticY)))
             (oneAboveX ?sourceX ?targetX)
         )
         :effect (and
@@ -105,6 +115,8 @@
             (agentAtCoordinateX ?entity ?sourceX)
             (agentAtCoordinateY ?entity ?staticY)
             (not (pitPosition ?targetX ?staticY))
+            (forall (?wumpus - movingWumpus) 
+                (not (wumpusAtCoordinate ?wumpus ?targetX ?staticY)))
             (oneBelowX ?sourceX ?targetX)
         )
         :effect (and
@@ -127,6 +139,8 @@
             (agentAtCoordinateY ?entity ?sourceY)
             (agentAtCoordinateX ?entity ?staticX)
             (not (pitPosition ?staticX ?targetY))
+            (forall (?wumpus - movingWumpus) 
+                (not (wumpusAtCoordinate ?wumpus ?staticX ?targetY)))
             (oneBelowY ?sourceY ?targetY)
         )
         :effect (and
@@ -149,6 +163,8 @@
             (agentAtCoordinateY ?entity ?sourceY)
             (agentAtCoordinateX ?entity ?staticX)
             (not (pitPosition ?staticX ?targetY))
+            (forall (?wumpus - movingWumpus) 
+                (not (wumpusAtCoordinate ?wumpus ?staticX ?targetY)))
             (oneAboveY ?sourceY ?targetY)
         )
         :effect (and
@@ -158,41 +174,42 @@
             (agentAtCoordinateY ?entity ?targetY)
         )
     )
-    (:action wumpus_moves_to_predefined_location
+    (:action wumpusMoves
         :parameters(
             ?wumpus - movingWumpus
-
-            ?presentMoment    - time
+            ?presentMoment - time
             ?sourceX - boardX
             ?sourceY - boardY
-
-            ?aheadMoment     - time
+            ?aheadMoment - time
             ?targetX  - boardX
             ?targetY  - boardY
         )
-        :precondition(
-            and
+        :precondition(and
             (not (canAgentMove true))
             (presentTime ?presentMoment)
             (not (presentTime ?aheadMoment))
-            (wumpusAtCoordinateX ?wumpus ?sourceX)
-            (wumpusAtCoordinateY ?wumpus ?sourceY)
+            (wumpusAtCoordinate ?wumpus ?sourceX ?sourceY)
             (positionWumpus ?targetX ?targetY ?aheadMoment)
             (futureTime ?presentMoment ?aheadMoment)
         )
-        :effect(
-            and
+        :effect(and
             (canAgentMove true)
             (not (presentTime ?presentMoment ))
             (presentTime ?aheadMoment  )
-            (not (wumpusAtCoordinateX ?wumpus ?sourceX ))
-            (not (wumpusAtCoordinateY ?wumpus ?sourceY ))
-            (wumpusAtCoordinateX ?wumpus ?targetX  )
-            (wumpusAtCoordinateY ?wumpus ?targetY  )
-            (usedTime ?presentMoment )
+            (not (wumpusAtCoordinate ?wumpus ?sourceX ?sourceY))
+            (wumpusAtCoordinate ?wumpus ?targetX ?targetY)
+            (forall (?agent - agent) (when (and 
+                    (not (agentAtCoordinateX ?agent ?targetX))
+                    (not (agentAtCoordinateY ?agent ?targetY))
+                )
+                (and
+                    (wumpusAtCoordinate ?wumpus ?sourceX ?sourceY)
+                ))
+            )
+            (usedTime ?presentMoment)
         )
     )
-    (:action ghost_stays
+    (:action wumpusStays
         :parameters (
             ?wumpus - movingWumpus
             ?presentMoment - time
@@ -207,14 +224,98 @@
             (presentTime ?presentMoment )
             (not (presentTime ?aheadMoment))
             (futureTime ?presentMoment ?aheadMoment)
-            (wumpusAtCoordinateX ?wumpus ?sourceX )
-            (wumpusAtCoordinateY ?wumpus ?sourceY )
+            (wumpusAtCoordinate ?wumpus ?sourceX ?sourceY)
             (not (usedTime ?presentMoment ))
         )
-        :effect(and
+        :effect (and
+            (canAgentMove true)
+            (not (presentTime ?presentMoment))
+            (presentTime ?aheadMoment)
+            (wumpusAtCoordinate ?wumpus ?sourceX ?sourceY)
+        )
+    )
+
+    (:action wumpusDead
+        :parameters (
+            ?wumpus - movingWumpus
+            ?presentMoment - time
+            ?aheadMoment - time
+        )
+        :precondition (and 
+            (not (alive ?wumpus))
+            (presentTime ?presentMoment)
+            (futureTime ?presentMoment ?aheadMoment)
+            (not (usedTime ?presentMoment))
+        )
+        :effect (and 
             (canAgentMove true)
             (not (presentTime ?presentMoment))
             (presentTime ?aheadMoment)
         )
     )
+
+    (:action shoot
+        :parameters (
+            ?shooter - agent
+            ?shooterX - boardX
+            ?shooterY - boardY
+            ?victim - movingWumpus
+            ?victimX - boardX
+            ?victimY - boardY
+        )
+        :precondition (and 
+            (alive ?victim)
+            (agentAtCoordinateY ?shooter ?shooterY)
+            (agentAtCoordinateX ?shooter ?shooterX)
+            (wumpusAtCoordinate ?victim ?victimX ?victimY)
+            ; the shooter can shoot if 
+            (or
+                ; XOR (A or B) and not(A and B)
+                (and 
+                    (or 
+                        (oneAboveX ?shooterX ?victimX)
+                        (oneAboveY ?shooterY ?victimY)
+                    )
+                    (not (and
+                        (oneAboveX ?shooterX ?victimX)
+                        (oneAboveY ?shooterY ?victimY)
+                    ))
+                )
+                ; XOR (A or B) and not(A and B)
+                (and 
+                    (or
+                        (oneBelowX ?shooterX ?victimX)
+                        (oneBelowY ?shooterY ?victimY)
+                    )
+                    (not (and
+                        (oneBelowX ?shooterX ?victimX)
+                        (oneBelowY ?shooterY ?victimY)
+                    ))
+                )
+            )
+        )
+        :effect (and 
+            (not (wumpusAtCoordinate ?victim ?victimX ?victimY))
+            (not (alive ?victim))
+        )
+    )
+
+    (:action pickupGold
+        :parameters (
+            ?object - gold
+            ?entity - agent
+            ?entityX - boardX
+            ?entityY - boardY
+        )
+        :precondition (and 
+            (agentAtCoordinateX ?entity ?entityX)
+            (agentAtCoordinateY ?entity ?entityY)
+            (goldPosition ?entityX ?entityY)
+        )
+        :effect (and 
+            (hasObject ?object ?entity)
+            (not (goldPosition ?entityX ?entityY))
+        )
+    )
+    
 )

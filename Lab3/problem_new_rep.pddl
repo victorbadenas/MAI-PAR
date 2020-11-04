@@ -4,8 +4,8 @@
 
     (:objects
     ; Definition of our objects: board coordinates, time, bool value, robot and ghost
-        X0 X1 X2 X3 X4 - board_coordinate_x
-        Y0 Y1 Y2 Y3 Y4 - board_coordinate_y
+        X0 X1 X2 X3 X4 X5 - board_coordinate_x
+        Y0 Y1 Y2 Y3 Y4 Y5 - board_coordinate_y
         T0 T1 T2 T3 T4 T5 T6 T7 T8 T9 - time_consumption
         true false - bool_value
         robot1   - circulating_robot
@@ -34,19 +34,22 @@
         (one_below_x X1 X2)
         (one_below_x X2 X3)
         (one_below_x X3 X4)
-        (below_x X0 X4) (below_x X0 X3) (below_x X0 X2) (below_x X0 X1)
-        (below_x X1 X4) (below_x X1 X3) (below_x X1 X2)
-        (below_x X2 X4) (below_x X2 X3)
-        (below_x X3 X4)
+        (one_below_x X4 X5)
+        (below_x X0 X5) (below_x X0 X4) (below_x X0 X3) (below_x X0 X2) (below_x X0 X1)
+        (below_x X1 X5) (below_x X1 X4) (below_x X1 X3) (below_x X1 X2)
+        (below_x X2 X5) (below_x X2 X4) (below_x X2 X3)
+        (below_x X3 X5) (below_x X3 X4)
+        (below_x X4 X5)
         (one_above_x X1 X0)
         (one_above_x X2 X1)
         (one_above_x X3 X2)
         (one_above_x X4 X3)
+        (one_above_x X5 X4)
+        (above_x X5 X0) (above_x X5 X1) (above_x X5 X2) (above_x X5 X3) (above_x X5 X4)
         (above_x X4 X0) (above_x X4 X1) (above_x X4 X2) (above_x X4 X3)
         (above_x X3 X0) (above_x X3 X1) (above_x X3 X2)
         (above_x X2 X0) (above_x X2 X1)
         (above_x X1 X0)
-        
 
 
         ; Description of the how are distributed the Y coordinates in the board
@@ -54,14 +57,18 @@
         (one_below_y Y1 Y2)
         (one_below_y Y2 Y3)
         (one_below_y Y3 Y4)
-        (below_y Y0 Y4) (below_y Y0 Y3) (below_y Y0 Y2) (below_y Y0 Y1)
-        (below_y Y1 Y4) (below_y Y1 Y3) (below_y Y1 Y2)
-        (below_y Y2 Y4) (below_y Y2 Y3)
-        (below_y Y3 Y4)
+        (one_below_y Y4 Y5)
+        (below_y Y0 Y5) (below_y Y0 Y4) (below_y Y0 Y3) (below_y Y0 Y2) (below_y Y0 Y1)
+        (below_y Y1 Y5) (below_y Y1 Y4) (below_y Y1 Y3) (below_y Y1 Y2)
+        (below_y Y2 Y5) (below_y Y2 Y4) (below_y Y2 Y3)
+        (below_y Y3 Y5) (below_y Y3 Y4)
+        (below_y Y4 Y5)
         (one_above_y Y1 Y0)
         (one_above_y Y2 Y1)
         (one_above_y Y3 Y2)
         (one_above_y Y4 Y3)
+        (one_above_y Y5 Y4)
+        (above_y Y5 Y0) (above_y Y5 Y1) (above_y Y5 Y2) (above_y Y5 Y3) (above_y Y5 Y4)
         (above_y Y4 Y0) (above_y Y4 Y1) (above_y Y4 Y2) (above_y Y4 Y3)
         (above_y Y3 Y0) (above_y Y3 Y1) (above_y Y3 Y2)
         (above_y Y2 Y0) (above_y Y2 Y1)
@@ -75,17 +82,17 @@
 
 
         ; Board coordinates of the ghost in the initial position
-        (ghost_at_coordinatex ghost1 X3)
-        (ghost_at_coordinatey ghost1 Y3)
+        (ghost_at_coordinatex ghost1 X4)
+        (ghost_at_coordinatey ghost1 Y4)
 
 
         ; Ghost predefined positions across time
-        (position_ghost X3 Y2 T1)
-        (position_ghost X2 Y2 T2)
-        ; (position_ghost X2 Y1 T3)
-        ; (position_ghost X2 Y1 T4)
-        ; (position_ghost X2 Y1 T5)
-        ; (position_ghost X2 Y1 T6)
+        (position_ghost X4 Y3 T1)
+        (position_ghost X4 Y2 T2)
+        (position_ghost X3 Y2 T3)
+        (position_ghost X3 Y3 T4)
+        (position_ghost X4 Y3 T5)
+        (position_ghost X4 Y4 T6)
 
 
         ; Global variables

@@ -1,16 +1,15 @@
 (define (domain wumpus_adl)
 
-    ;remove requirements that are not needed
     (:requirements
         :strips
         :typing
         :adl)
 
-    (:types ;todo: enumerate types and their hierarchy here, e.g. car truck bus - vehicle
+    (:types
         agent wumpus square gold arrow
     )
 
-    (:predicates ;todo: define predicates here
+    (:predicates
         (isAdjacent ?sq1 ?sq2)
         (isPit ?sq)
         (isInSquare ?entity ?sq)

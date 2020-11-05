@@ -16,7 +16,6 @@
         movingWumpus
         boardX
         boardY
-        boolValue
         gold
         arrow
     )
@@ -63,10 +62,6 @@
                             ?entity - agent)
     )
 
-    (:functions
-        (cost)
-    )
-
     (:action move_agent_left
         :parameters (
             ?entity - agent
@@ -84,7 +79,6 @@
             (oneAboveX ?sourceX ?targetX)
         )
         :effect (and
-            (increase (cost) 1)
             (not (agentAtCoordinateX ?entity ?sourceX))
             (agentAtCoordinateX ?entity ?targetX)
         )
@@ -106,7 +100,6 @@
             (oneBelowX ?sourceX ?targetX)
         )
         :effect (and
-            (increase (cost) 1)
             (not (agentAtCoordinateX ?entity ?sourceX))
             (agentAtCoordinateX ?entity ?targetX)
         )
@@ -128,7 +121,6 @@
             (oneBelowY ?sourceY ?targetY)
         )
         :effect (and
-            (increase (cost) 1)
             (not (agentAtCoordinateY ?entity ?sourceY))
             (agentAtCoordinateY ?entity ?targetY)
         )
@@ -150,7 +142,6 @@
             (oneAboveY ?sourceY ?targetY)
         )
         :effect (and
-            (increase (cost) 1)
             (not (agentAtCoordinateY ?entity ?sourceY))
             (agentAtCoordinateY ?entity ?targetY)
         )

@@ -10,7 +10,6 @@
         :adl
         :fluents
     )
-
     (:types
         agent
         movingWumpus
@@ -19,7 +18,6 @@
         gold
         arrow
     )
-
     (:predicates
         (belowX         ?xa - boardX
                         ?xb - boardX)
@@ -61,7 +59,6 @@
         (hasObject          ?object - object
                             ?entity - agent)
     )
-
     (:action move_agent_left
         :parameters (
             ?entity - agent
@@ -146,7 +143,6 @@
             (agentAtCoordinateY ?entity ?targetY)
         )
     )
-
     (:action shoot
         :parameters (
             ?shooter - agent
@@ -192,7 +188,6 @@
             (not (alive ?victim))
         )
     )
-
     (:action pickupGold
         :parameters (
             ?object - gold
@@ -210,5 +205,4 @@
             (not (goldPosition ?entityX ?entityY))
         )
     )
-    
 )

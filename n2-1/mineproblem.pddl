@@ -1,66 +1,74 @@
 (define (problem n21prob) (:domain n21dom)
+
+    ; DECLARATION OF OBJECTS
+    ; 15 tiles and 3 values for the coordinates are necessary
+    ; coordinates [0,3]
+    ; tiles n**2 - 1 = 15
     (:objects 
         t1 t2 t3 t4 t5 t6 t7 t8 t9 t10 t11 t12 t13 t14 t15 - tile
-        x0 x1 x2 x3 - coordinate
-        y0 y1 y2 y3 - coordinate
+        p0 p1 p2 p3 - coordinate
     )
 
+    ; VARIABLE INICIALIZATION
     (:init
-        (coordinateFree x2 y0)
-        (tileAt t1 x2 y1)
-        (tileAt t2 x0 y3)
-        (tileAt t3 x0 y2)
-        (tileAt t4 x1 y1)
-        (tileAt t5 x3 y3)
-        (tileAt t6 x2 y3)
-        (tileAt t7 x1 y2)
-        (tileAt t8 x3 y2)
-        (tileAt t9 x2 y2)
-        (tileAt t10 x1 y0)
-        (tileAt t11 x0 y1)
-        (tileAt t12 x3 y1)
-        (tileAt t13 x3 y0)
-        (tileAt t14 x1 y3)
-        (tileAt t15 x0 y0)
+        ; define which values of the coordinates have a difference of 1
+        (oneover p3 p2)
+        (oneover p2 p1)
+        (oneover p1 p0)
 
-        (oneabove y3 y2)
-        (oneabove y2 y1)
-        (oneabove y1 y0)
+        ; define which values of the coordinates have a difference of -1
+        (oneunder p0 p1)
+        (oneunder p1 p2)
+        (oneunder p2 p3)
 
-        (onebelow y0 y1)
-        (onebelow y1 y2)
-        (onebelow y2 y3)
+        ; define free coordinate
+        (coordinateFree p2 p0)
 
-        (oneleft x3 x2)
-        (oneleft x2 x1)
-        (oneleft x1 x0)
+        ; define the initial coordinates for the tiles
+        (tileAt t1 p2 p1)
+        (tileAt t2 p0 p3)
+        (tileAt t3 p0 p2)
+        (tileAt t4 p1 p1)
+        (tileAt t5 p3 p3)
+        (tileAt t6 p2 p3)
+        (tileAt t7 p1 p2)
+        (tileAt t8 p3 p2)
+        (tileAt t9 p2 p2)
+        (tileAt t10 p1 p0)
+        (tileAt t11 p0 p1)
+        (tileAt t12 p3 p1)
+        (tileAt t13 p3 p0)
+        (tileAt t14 p1 p3)
+        (tileAt t15 p0 p0)\
 
-        (oneright x0 x1)
-        (oneright x1 x2)
-        (oneright x2 x3)
-
+        ; initialize cost to 0
+        (= (cost) 0)
     )
 
+    ; GOAL DEFINITION
+    ; Each of the tiles must be ordered from left to right and the free tile
+    ; must be in the 3,3 position.
     (:goal (and
-        (tileAt t1 x0 y0)
-        (tileAt t2 x1 y0)
-        (tileAt t3 x2 y0)
-        (tileAt t4 x3 y0)
-        (tileAt t5 x0 y1)
-        (tileAt t6 x1 y1)
-        (tileAt t7 x2 y1)
-        (tileAt t8 x3 y1)
-        (tileAt t9 x0 y2)
-        (tileAt t10 x1 y2)
-        (tileAt t11 x2 y2)
-        (tileAt t12 x3 y2)
-        (tileAt t13 x0 y3)
-        (tileAt t14 x1 y3)
-        (tileAt t15 x2 y3)
-        (coordinateFree x3 y3)
+        (tileAt t15 p2 p3)
+        (tileAt t14 p1 p3)
+        (tileAt t13 p0 p3)
+        (tileAt t12 p3 p2)
+        (tileAt t11 p2 p2)
+        (tileAt t10 p1 p2)
+        (tileAt t9 p0 p2)
+        (tileAt t8 p3 p1)
+        (tileAt t7 p2 p1)
+        (tileAt t6 p1 p1)
+        (tileAt t5 p0 p1)
+        (tileAt t4 p3 p0)
+        (tileAt t3 p2 p0)
+        (tileAt t2 p1 p0)
+        (tileAt t1 p0 p0)
         )
     )
 
-;un-comment the following line if metric is needed
-;(:metric minimize (???))
+    ; optimize for the minimal cost metric (minimal number of moves).
+    (:metric
+        minimize(cost)
+    )
 )
